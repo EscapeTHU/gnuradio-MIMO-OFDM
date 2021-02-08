@@ -1,0 +1,36 @@
+id: blocks_complex_to_interleaved_short
+label: Complex To IShort
+flags: [ python, cpp ]
+
+parameters:
+-   id: vector_output
+    label: Vector Output
+    dtype: enum
+    default: 'False'
+    options: ['False', 'True']
+    option_labels: ['No', 'Yes']
+    option_attributes:
+        vlen: [1, 2]
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: short
+    vlen: ${ vector_output.vlen }
+
+templates:
+    imports: from gnuradio import blocks
+    make: blocks.complex_to_interleaved_short(${vector_output})
+
+cpp_templates:
+    includes: ['#include <gnuradio/blocks/complex_to_interleaved_short.h>']
+    declarations: 'blocks::complex_to_interleaved_short::sptr ${id};'
+    make: 'this->${id} = blocks::complex_to_interleaved_short::make(${vector_output});'
+    translations:
+        'True': 'true'
+        'False': 'false'
+
+file_format: 1
